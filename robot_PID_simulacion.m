@@ -6,8 +6,8 @@ num_pasos = tiempo_total / dt;
 % Setpoint dinámico (curva deseada)
 tiempo = linspace(0, tiempo_total, num_pasos);
 setpoint = tiempo; % Setpoint como una línea creciente
-bandaerrorsup = tiempo + 0.5; % Banda de error superior
-bandaerrorinf = tiempo - 0.5; % Banda de error inferior
+bandaerrorsup = setpoint + 0.5; % Banda de error superior
+bandaerrorinf = setpoint - 0.5; % Banda de error inferior
 
 % Controlador PID
 Kp = 3.8;  % Ganancia proporcional
@@ -43,7 +43,7 @@ for i = 1:num_pasos
     
     % Actualizar posición (aplicación de control + perturbación)
     perturbacion = (rand * 0.1) - 0.1;
-    posicion = posicion + salida_pid * dt + perturbacion;
+    posicion = posicion + salida_pid * dt;% + perturbacion;
     
     % Guardar valores
     posiciones(i) = posicion;
@@ -60,8 +60,8 @@ figure;
 subplot(2,1,1); % Gráfico 1: Posición y Setpoint
 hold on;
 plot(tiempo, setpoint, 'r--', 'DisplayName', 'Pista a seguir');
-plot(tiempo, bandaerrorsup, 'c-');
-plot(tiempo, bandaerrorinf, 'c-', 'DisplayName', 'Banda de error');
+plot(tiempo, bandaerrorsup, 'c-', 'DisplayName', 'Banda de error superior');
+plot(tiempo, bandaerrorinf, 'c-', 'DisplayName', 'Banda de error inferior');
 plot(tiempo, posiciones, 'b-', 'DisplayName', 'Posición del robot');
 title('Simulación de seguimiento de curva (visto desde arriba)');
 xlabel('Tiempo (s)');
